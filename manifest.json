@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+
+  "name": "Bamboo CI Monitor",
+  "description": "CCMenu chrome extension for bamboo CI",
+  "version": "1.0",
+
+  "permissions": [
+    "http://*/*", "https://*/*", "storage"
+  ],
+  "browser_action": {
+    "default_popup": "builds.html"
+  },
+  "options_page": "options.html"
+}
