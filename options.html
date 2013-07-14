@@ -3,28 +3,18 @@
   <head>
     <title>bamboo CCMenu options</title>
     <style>
-      ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        margin-left: 10px;
-      }
-
-      li {
-        list-style-type: none;
-      }
-
       #newPlan {
         width: 50%;
         float: left;
       }
 
-      #savedPlan {
-        width: 50%;
-        float: left;
+      #savedPlans {
+        position: fixed;
+        right: 0px;
+        width: 500px;
       }
 
-      #requestPlanError, #requestLoading {
+      #requestPlanError {
         display: none;
       }
 
@@ -35,15 +25,16 @@
   <body>
     <div id="newPlan">new plans
       <div id="bambooServer">
-        <input id="bambooServerUrl">
-        <button id="bambooServerUrlButton" disabled="disabled">submit</button>
+        <input id="bambooServerUrl" type="text">
+        <button id="bambooServerUrlButton" type="submit" disabled="disabled">submit</button>
       </div>
+      <div id="requestPlanError">invalid URL</div>
       <div id="newPlans">
-        <div id="requestLoading">loading...</div>
-        <div id="requestPlanError">invalid URL</div>
       </div>
     </div>
-    <div id="savedPlan">saved plans</div>
+    <div id="savedPlans">saved plans
+      <ul></ul>
+    </div>
   </body>
 </html>
 
