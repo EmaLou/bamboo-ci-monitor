@@ -1,16 +1,16 @@
-function renderPlans(data) {
+function renderRequestedPlans(data) {
   var projects = '',
       plans = '',
       singleProject,
       singlePlan,
-      isPlanExist;
+      isSavedPlan;
   for (var i in data.projects.project) {
     plans = '';
     singleProject = data.projects.project[i];
     for (var j in singleProject.plans.plan) {
       singlePlan = singleProject.plans.plan[j];
-      isPlanExist = findPlanInStorage(singlePlan);
-      plans += '<li>' + '<input type="checkbox" class="addPlan" value="' + singlePlan.name + '" data-href="' + singlePlan.link.href + '" data-key="' + singlePlan.key + '"'+ (isPlanExist? ' checked="checked"' : '')  +'>' + singlePlan.name + '</li>';
+      isSavedPlan = storage.findPlanInStorage(singlePlan);
+      plans += '<li>' + '<input type="checkbox" class="addPlan" value="' + singlePlan.name + '" data-href="' + singlePlan.link.href + '" data-key="' + singlePlan.key + '"'+ (isSavedPlan? ' checked="checked"' : '')  +'>' + singlePlan.name + '</li>';
     }
     plans = '<ul>' + plans + '</ul>';
     projects += '<li>' + singleProject.name + '</li>' + plans;
@@ -25,92 +25,43 @@ function requestPlans(bambooServerUrl) {
   $('#requestPlanError').slideDown('fast');
   $.ajax({
     url: bambooServerUrl + 'rest/api/latest/project.json?expand=projects.project.plans.plan',
-    success: renderPlans,
+    success: renderRequestedPlans,
     error: function() {
       $('#requestPlanError').html('something went wrong...please try again later');
     }
   });
 }
 
-function getStorage() {
-  var savedPlans = localStorage.savedPlans;
-  if (savedPlans === undefined || savedPlans === "") {
-    return [];
-  }
-  return JSON.parse(localStorage.savedPlans);
-}
-
-function setStorage(savedPlans) {
-  localStorage.savedPlans = JSON.stringify(savedPlans);
-}
-
-function savePlanToStorage(plan) {
-  var savedPlans = getStorage();
-
-  for (i in savedPlans) {
-    if (savedPlans[i].key === plan.key 
-      && savedPlans[i].name === plan.name 
-      && savedPlans[i].href === plan.href) {
-      return;
-    }
-  }
-  savedPlans.push(plan);    
-  setStorage(savedPlans);
-}
-
-function deletePlanFromStorage(plan) {
-  var savedPlans = getStorage(),
-      newSavedPlans = [];
-  for (i in savedPlans) {
-    if (savedPlans[i].key === plan.key 
-      && savedPlans[i].name === plan.name 
-      && savedPlans[i].href === plan.href) {
-      continue;
-    }
-    newSavedPlans.push(savedPlans[i]);
-  }
-  setStorage(newSavedPlans);
-}
-
-function findPlanInStorage(plan) {
-  var savedPlans = getStorage();
-  for (i in savedPlans) {
-    if (savedPlans[i].key === plan.key 
-      && savedPlans[i].name === plan.name 
-      && (savedPlans[i].href === plan.href
-      || savedPlans[i].href === plan.link.href)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-function getPlanLink(plan) {
+function generateLinkOfPlan(plan) {
   var hostPattern = /^(https?:\/\/)?([A-Za-z\d\.-]+)\//,
       host;
   host = hostPattern.exec(plan.href)[0];
   return '<a href="' + host + 'browse/' + plan.key + '">' + plan.name + '</a>';
 }
 
-function savePlan(plan) {
-  savePlanToStorage(plan);
-  $('#savedPlans ul').append('<li id="' + plan.key + '">' + getPlanLink(plan) + '</li>');
+function renderSavedPlan(savedPlan) {
+  $('#savedPlans ul').append('<li id="' + savedPlan.key + '">' + generateLinkOfPlan(savedPlan) + '</li>');
 }
 
-function deletePlan(plan) {
-  deletePlanFromStorage(plan);
-  $('#savedPlans ul').find("#" + plan.key).remove();
-}
-
-function renderSavedPlans() {
-  var savedPlans = getStorage();
+function renderSavedPlans(savedPlans) {
   for (i in savedPlans) {
-    $('#savedPlans ul').append('<li id="' + savedPlans[i].key + '">'+getPlanLink(savedPlans[i])+'</li>');
+    renderSavedPlan(savedPlans[i]);
   }
 }
 
+function savePlan(plan) {
+  storage.savePlanToStorage(plan);
+  renderSavedPlan(plan);
+}
+
+function deletePlan(plan) {
+  storage.deletePlanFromStorage(plan);
+  $('#savedPlans ul').find("#" + plan.key).remove();
+}
+
 $(document).ready(function() {
-  renderSavedPlans();
+  var savedPlans = storage.getStorage();
+  renderSavedPlans(savedPlans);
 
   $('#bambooServerUrlButton').click(function(e) {
     var bambooServerUrl = $('#bambooServerUrl').val();
@@ -156,8 +107,3 @@ $(document).ready(function() {
     }
   });
 });
-
-
-
-
-
