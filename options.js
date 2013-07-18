@@ -10,7 +10,7 @@ function renderRequestedPlans(data) {
     for (var j in singleProject.plans.plan) {
       singlePlan = singleProject.plans.plan[j];
       isSavedPlan = storage.findPlanInStorage(singlePlan);
-      plans += '<li>' + '<input type="checkbox" class="addPlan" value="' + singlePlan.name + '" data-href="' + singlePlan.link.href + '" data-key="' + singlePlan.key + '"'+ (isSavedPlan? ' checked="checked"' : '')  +'>' + singlePlan.name + '</li>';
+      plans += '<li>' + '<input type="checkbox" class="addPlan" data-key="' + singlePlan.key + '" data-name="' + singlePlan.name + '" data-href="' + singlePlan.link.href + '"'+ (isSavedPlan? ' checked="checked"' : '')  +'>' + singlePlan.name + '</li>';
     }
     plans = '<ul>' + plans + '</ul>';
     projects += '<li>' + singleProject.name + '</li>' + plans;
@@ -40,7 +40,7 @@ function generateLinkOfPlan(plan) {
 }
 
 function renderSavedPlan(savedPlan) {
-  $('#savedPlans ul').append('<li id="' + savedPlan.key + '">' + generateLinkOfPlan(savedPlan) + '</li>');
+  $('#savedPlans ul').append('<li id="' + savedPlan.key + '" data-key="'+savedPlan.key+'" data-href="'+savedPlan.href+'" data-name="'+savedPlan.name+'"><input type="checkbox" class="deletePlan" checked="checked">' + generateLinkOfPlan(savedPlan) + '</li>');
 }
 
 function renderSavedPlans(savedPlans) {
@@ -96,7 +96,7 @@ $(document).ready(function() {
 
   $('.addPlan').live('click', function() {
     var plan = {key: $(this).data('key'),
-              name: $(this).val(),
+              name: $(this).data('name'),
               href: $(this).data('href')
               };
     if ($(this).is(':checked')) {
@@ -105,5 +105,14 @@ $(document).ready(function() {
     else {
       deletePlan(plan);
     }
+  });
+
+  $('.deletePlan').live('click', function() {
+    var li = $(this).closest("li"),
+        plan = {key: $(li).data('key'),
+                name: $(li).data('name'),
+                href: $(li).data('href')
+              };
+    deletePlan(plan);
   });
 });
