@@ -11,5 +11,9 @@
   "browser_action": {
     "default_popup": "builds.html"
   },
-  "options_page": "options.html"
+  "options_page": "options.html",
+  "background": {
+    "scripts": ["jquery.min.js", "storage.js", "fetchPlanStatus.js"]
+  }
+
 }

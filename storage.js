@@ -25,6 +25,19 @@ var storage = {
     this.setStorage(savedPlans);
   },
 
+  savePlanStatusToStorage: function(plan) {
+    var savedPlans = this.getStorage();
+
+    for (i in savedPlans) {
+      if (savedPlans[i].key === plan.key 
+        && savedPlans[i].name === plan.name 
+        && savedPlans[i].href === plan.href) {
+        savedPlans[i] = plan;
+      }
+    }
+    this.setStorage(savedPlans);
+  },
+
   deletePlanFromStorage: function(plan) {
     var savedPlans = this.getStorage(),
         newSavedPlans = [];
