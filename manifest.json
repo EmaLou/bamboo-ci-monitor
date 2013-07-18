@@ -13,7 +13,7 @@
   },
   "options_page": "options.html",
   "background": {
-    "scripts": ["jquery.min.js", "storage.js", "fetchPlanStatus.js"]
+    "scripts": ["js/jquery.min.js", "js/storage.js", "js/fetchPlanStatus.js"]
   }
 
 }
