@@ -57,6 +57,10 @@ function savePlan(plan) {
 function deletePlan(plan) {
   storage.deletePlanFromStorage(plan);
   $('#savedPlans ul').find("#" + plan.key).remove();
+  var input = $('#newPlans input').filter(function() {
+    return $(this).data('key') === plan.key;
+  });
+  input.prop("checked", false);
 }
 
 $(document).ready(function() {
