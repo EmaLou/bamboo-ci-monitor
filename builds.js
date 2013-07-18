@@ -1,15 +1,21 @@
+function getPlanStatus(plan) {
+	if (plan.latestStatus === undefined || plan.currentStatus === undefined) {
+		return 'unavailable';
+	}
+	if (plan.currentStatus === "NULL") {
+		return plan.latestStatus;
+	}
+	else {
+		return 'building after ' + plan.latestStatus;
+	}
+}
+
 function renderSavedPlansStatus() {
 	var savedPlans = storage.getStorage(),
 			name, status;
 	$('#status ul').html('');
-
 	for (i in savedPlans) {
-		name = savedPlans[i].name;
-		status = savedPlans[i].status;
-		if (status === undefined) {
-			status = 'unavailable';
-		}
-		$('#status ul').append('<li>' + name + ' ' + status + '</li>');
+		$('#status ul').append('<li>' + savedPlans[i].name + ' ' + getPlanStatus(savedPlans[i]) + '</li>');
 	}
 }
 

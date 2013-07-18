@@ -25,17 +25,20 @@ var storage = {
     this.setStorage(savedPlans);
   },
 
-  savePlanStatusToStorage: function(plan) {
+  savePlanStatusToStorage: function(plan, status) {
     var savedPlans = this.getStorage();
 
     for (i in savedPlans) {
       if (savedPlans[i].key === plan.key 
         && savedPlans[i].name === plan.name 
         && savedPlans[i].href === plan.href) {
-        savedPlans[i] = plan;
+        for (key in status) {
+          savedPlans[i][key] = status[key];
+        }
+        this.setStorage(savedPlans);
+        return;
       }
     }
-    this.setStorage(savedPlans);
   },
 
   deletePlanFromStorage: function(plan) {
