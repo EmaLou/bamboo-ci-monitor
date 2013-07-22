@@ -73,7 +73,10 @@ $(document).ready(function() {
       return;
     }
     $('#newPlans').html('');
-    if (bambooServerUrl.length > 0 && bambooServerUrl[bambooServerUrl.length -1] !== '/') {
+    if (bambooServerUrl.substring(0, 3) !== "http") {
+      bambooServerUrl = "http://" + bambooServerUrl;
+    }
+    if (bambooServerUrl.length > 0 && bambooServerUrl[bambooServerUrl.length -1] !== "/") {
       bambooServerUrl += '/';
     }
     requestPlans(bambooServerUrl);
