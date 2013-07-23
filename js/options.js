@@ -1,22 +1,40 @@
-function renderRequestedPlans(data) {
+function renderRequestedPlans(data, selector) {
   var projects = '',
       plans = '',
       singleProject,
       singlePlan,
       isSavedPlan;
+
   for (var i in data.projects.project) {
     plans = '';
     singleProject = data.projects.project[i];
+    $(selector).append('<li id="' + singleProject.key + '">' + singleProject.name + '<ul></ul></li>')
     for (var j in singleProject.plans.plan) {
-      singlePlan = singleProject.plans.plan[j];
+      singlePlan = new Plan({
+        name: singleProject.plans.plan[j].name,
+        key: singleProject.plans.plan[j].key,
+        href: singleProject.plans.plan[j].link.href,
+      });
       isSavedPlan = storage.findPlanInStorage(singlePlan);
-      plans += '<li>' + '<input type="checkbox" class="addPlan" data-key="' + singlePlan.key + '" data-name="' + singlePlan.name + '" data-href="' + singlePlan.link.href + '"'+ (isSavedPlan? ' checked="checked"' : '')  +'>' + singlePlan.name + '</li>';
+      $(selector).find('#' + singleProject.key + ' ul').append(
+        '<li>' +
+          '<input type="checkbox" class="addPlan" data-key="' + singlePlan.key + '" data-name="' + singlePlan.name + '" data-href="' + singlePlan.href + '"'+ (isSavedPlan? ' checked="checked"' : '')  +'>' +
+          singlePlan.name +
+        '</li>');
     }
-    plans = '<ul>' + plans + '</ul>';
-    projects += '<li>' + singleProject.name + '</li>' + plans;
   }
-  projects = '<ul>' + projects + '</ul>';
-  $('#newPlans').append(projects);
+  $('.addPlan').on('click', function() {
+    var plan = new Plan({key: $(this).data('key'),
+                        name: $(this).data('name'),
+                        href: $(this).data('href')
+                        });
+    if ($(this).is(':checked')) {
+      savePlan(plan);
+    }
+    else {
+      deletePlan(plan);
+    }
+  });
   $('#requestPlanError').slideUp('fast');
 }
 
@@ -25,22 +43,20 @@ function requestPlans(bambooServerUrl) {
   $('#requestPlanError').slideDown('fast');
   $.ajax({
     url: bambooServerUrl + 'rest/api/latest/project.json?expand=projects.project.plans.plan',
-    success: renderRequestedPlans,
+    success: function(data) {
+      renderRequestedPlans(data, '#newPlans > ul');
+    },
     error: function() {
       $('#requestPlanError').html('something went wrong...please try again later');
     }
   });
 }
 
-function generateLinkOfPlan(plan) {
-  var hostPattern = /^(https?:\/\/)?([A-Za-z\d\.-]+)\//,
-      host;
-  host = hostPattern.exec(plan.href)[0];
-  return '<a href="' + host + 'browse/' + plan.key + '">' + plan.name + '</a>';
-}
-
 function renderSavedPlan(savedPlan) {
-  $('#savedPlans ul').append('<li id="' + savedPlan.key + '" data-key="'+savedPlan.key+'" data-href="'+savedPlan.href+'" data-name="'+savedPlan.name+'"><input type="checkbox" class="deletePlan" checked="checked">' + generateLinkOfPlan(savedPlan) + '</li>');
+  $('#savedPlans ul').append('<li id="' + savedPlan.key + '" data-key="'+savedPlan.key+'" data-href="'+savedPlan.href+'" data-name="'+savedPlan.name+'">' + 
+                               '<input type="checkbox" class="deletePlan" checked="checked">' + 
+                               savedPlan.getLink() + 
+                             '</li>');
 }
 
 function renderSavedPlans(savedPlans) {
@@ -72,8 +88,8 @@ $(document).ready(function() {
     if ($("#bambooServerUrlButton").is(":disabled")) {
       return;
     }
-    $('#newPlans').html('');
-    if (bambooServerUrl.substring(0, 3) !== "http") {
+    $('#newPlans ul').html('');
+    if (bambooServerUrl.substring(0, 4) !== "http") {
       bambooServerUrl = "http://" + bambooServerUrl;
     }
     if (bambooServerUrl.length > 0 && bambooServerUrl[bambooServerUrl.length -1] !== "/") {
@@ -98,19 +114,6 @@ $(document).ready(function() {
       $('#requestPlanError').html('invalid url')
       $('#requestPlanError').slideDown();
       $('#bambooServerUrlButton').attr('disabled', 'disabled');
-    }
-  });
-
-  $('.addPlan').live('click', function() {
-    var plan = {key: $(this).data('key'),
-              name: $(this).data('name'),
-              href: $(this).data('href')
-              };
-    if ($(this).is(':checked')) {
-      savePlan(plan);
-    }
-    else {
-      deletePlan(plan);
     }
   });
 

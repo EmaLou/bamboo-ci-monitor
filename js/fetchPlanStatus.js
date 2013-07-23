@@ -1,28 +1,15 @@
 var hostPattern = /^(https?:\/\/)?([A-Za-z\d\.-]+)\//;
 
-function updateLatestStatus(data, plan) {
-	storage.savePlanStatusToStorage(plan, {
-		latestNumber: data.results.result[0].number,
-		latestStatus: data.results.result[0].state
-	});
-}
-
 function updateCurrentStatus(data, plan) {
 	var host = hostPattern.exec(plan.href);
 	$.ajax({
 		url: host[0] + 'rest/api/latest/result/' + plan.key + '/' + (data.results.result[0].number + 1) + '.json',
 		statusCode: {
 			200: function(response) {
-				storage.savePlanStatusToStorage(plan, {
-					currentNumber: response.number,
-					currentStatus: response.state
-				});
+				plan.updateCurrentStatus(response.number, response.state);
 			},
 			404: function() {
-				storage.savePlanStatusToStorage(plan, {
-					currentNumber: data.results.result[0].number + 1,
-					currentStatus: 'NULL'
-				});
+				plan.updateCurrentStatus(data.results.result[0].number + 1, 'NULL');
 			}
 		}
 	});
@@ -33,8 +20,9 @@ function updatePlanStatus(plan){
 	$.ajax({
 		url: host[0] + 'rest/api/latest/result/' + plan.key + '.json',
 		success: function(data) {
-			updateLatestStatus(data, plan);
+			plan.updateLatestStatus(data.results.result[0].number, data.results.result[0].state);
 			updateCurrentStatus(data, plan);
+			storage.savePlanToStorage(plan);
 		}
 	});
 }

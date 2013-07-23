@@ -14,7 +14,7 @@
   },
   "options_page": "options.html",
   "background": {
-    "scripts": ["js/jquery.min.js", "js/storage.js", "js/fetchPlanStatus.js"]
+    "scripts": ["js/jquery.min.js", "js/plan.js", "js/storage.js", "js/fetchPlanStatus.js"]
   }
 
 }

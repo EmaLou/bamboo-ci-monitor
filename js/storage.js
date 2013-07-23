@@ -4,24 +4,33 @@ var storage = {
     if (savedPlans === undefined || savedPlans === "") {
       return [];
     }
-    return JSON.parse(localStorage.savedPlans);
+    savedPlans = JSON.parse(savedPlans);
+    for (i in savedPlans) {
+      savedPlans[i] = new Plan(savedPlans[i]);
+    }
+    return savedPlans;
   },
 
   setStorage: function(plans) {
+    for (i in plans) {
+      plans[i] = plans[i].toJSON();
+    }
     localStorage.savedPlans = JSON.stringify(plans);
   },
 
   savePlanToStorage: function(plan) {
-    var savedPlans = this.getStorage();
+    var savedPlans = this.getStorage(),
+        saved = false;
 
     for (i in savedPlans) {
-      if (savedPlans[i].key === plan.key 
-        && savedPlans[i].name === plan.name 
-        && savedPlans[i].href === plan.href) {
-        return;
+      if (savedPlans[i].equals(plan)) {
+        savedPlans[i] = plan;
+        saved = true;
       }
     }
-    savedPlans.push(plan);    
+    if (saved === false) {
+      savedPlans.push(plan);
+    }
     this.setStorage(savedPlans);
   },
 
