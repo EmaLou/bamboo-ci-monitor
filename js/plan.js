@@ -38,7 +38,7 @@ Plan.prototype.equals = function(plan) {
 Plan.prototype.getLink = function() {
   var hostPattern = /^(https?:\/\/)?([A-Za-z\d\.-]+)\//,
       host = hostPattern.exec(this.href)[0];
-  return '<a href="' + host + 'browse/' + this.key + '">' + this.name + '</a>';
+  return '<a href="' + host + 'browse/' + this.key + '" target="_blank">' + this.name + '</a>';
 };
 
 Plan.prototype.updateLatestStatus = function(latestBuildNumber, latestStatus) {

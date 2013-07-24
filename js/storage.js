@@ -24,14 +24,24 @@ var storage = {
 
     for (i in savedPlans) {
       if (savedPlans[i].equals(plan)) {
-        savedPlans[i] = plan;
-        saved = true;
+        return;
       }
     }
-    if (saved === false) {
-      savedPlans.push(plan);
-    }
+    savedPlans.push(plan);
     this.setStorage(savedPlans);
+  },
+
+  updatePlan: function(plan) {
+    var savedPlans = this.getStorage(),
+        saved = false;
+
+    for (i in savedPlans) {
+      if (savedPlans[i].equals(plan)) {
+        savedPlans[i] = plan;
+        this.setStorage(savedPlans);
+        return;
+      }
+    }
   },
 
   savePlanStatusToStorage: function(plan, status) {
@@ -54,9 +64,7 @@ var storage = {
     var savedPlans = this.getStorage(),
         newSavedPlans = [];
     for (i in savedPlans) {
-      if (savedPlans[i].key === plan.key 
-        && savedPlans[i].name === plan.name 
-        && savedPlans[i].href === plan.href) {
+      if (savedPlans[i].equals(plan)) {
         continue;
       }
       newSavedPlans.push(savedPlans[i]);
@@ -67,10 +75,7 @@ var storage = {
   findPlanInStorage: function(plan) {
     var savedPlans = this.getStorage();
     for (i in savedPlans) {
-      if (savedPlans[i].key === plan.key 
-        && savedPlans[i].name === plan.name 
-        && (savedPlans[i].href === plan.href
-        || savedPlans[i].href === plan.link.href)) {
+      if (savedPlans[i].equals(plan)) {
         return true;
       }
     }

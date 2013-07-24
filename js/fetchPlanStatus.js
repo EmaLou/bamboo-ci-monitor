@@ -7,9 +7,11 @@ function updateCurrentStatus(data, plan) {
 		statusCode: {
 			200: function(response) {
 				plan.updateCurrentStatus(response.number, response.state);
+				storage.updatePlan(plan);
 			},
 			404: function() {
 				plan.updateCurrentStatus(data.results.result[0].number + 1, 'NULL');
+				storage.updatePlan(plan);
 			}
 		}
 	});
@@ -21,8 +23,8 @@ function updatePlanStatus(plan){
 		url: host[0] + 'rest/api/latest/result/' + plan.key + '.json',
 		success: function(data) {
 			plan.updateLatestStatus(data.results.result[0].number, data.results.result[0].state);
+			storage.updatePlan(plan);
 			updateCurrentStatus(data, plan);
-			storage.savePlanToStorage(plan);
 		}
 	});
 }
@@ -46,4 +48,5 @@ function fetchSavedPlansStatus () {
 	});
 }
 
+fetchSavedPlansStatus();
 setInterval(fetchSavedPlansStatus, 5000);
