@@ -27,11 +27,23 @@ function updatePlanStatus(plan){
 	});
 }
 
+function updateIcon(icon, plan) {
+	if (plan.getStatusIndex() > icon) {
+		return plan.getStatusIndex();
+	}
+	return icon;
+}
+
 function fetchSavedPlansStatus () {
-	var savedPlans = storage.getStorage();
+	var savedPlans = storage.getStorage(),
+			icon = 0;
 	for (i in savedPlans) {
 		updatePlanStatus(savedPlans[i]);
+		icon = updateIcon(icon, savedPlans[i]);
 	}
+	chrome.browserAction.setIcon({
+		path: statusIcons[icon]
+	});
 }
 
 setInterval(fetchSavedPlansStatus, 5000);
