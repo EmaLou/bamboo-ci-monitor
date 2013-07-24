@@ -3,7 +3,11 @@ function renderSavedPlansStatus() {
 			name, status;
 	$('#status ul').html('');
 	for (i in savedPlans) {
-		$('#status ul').append('<li><img src="' + savedPlans[i].getStatusIcon() + '"></img>' + savedPlans[i].name + '</li>');
+		$('#status ul').append(
+			'<li>' +
+			  '<img src="' + savedPlans[i].getStatusIcon() + '"></img>' +
+			  savedPlans[i].getLink() +
+			'</li>');
 	}
 }
 
