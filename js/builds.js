@@ -4,7 +4,7 @@ function renderSavedPlansStatus() {
 	$('#status ul').html('');
 	for (i in savedPlans) {
 		$('#status ul').append(
-			'<li>' +
+			'<li class="plan">' +
 			  '<img src="' + savedPlans[i].getStatusIcon() + '"></img>' +
 			  savedPlans[i].getLink() +
 			'</li>');
