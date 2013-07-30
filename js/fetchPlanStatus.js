@@ -25,7 +25,13 @@ function updatePlanStatus(plan){
 			plan.updateLatestStatus(data.results.result[0].number, data.results.result[0].state);
 			storage.updatePlan(plan);
 			updateCurrentStatus(data, plan);
-		}
+		},
+		error: function(data) {
+			plan.updateLatestStatus(0, 'NULL');
+			plan.updateCurrentStatus(1, 'NULL');
+			storage.updatePlan(plan);
+		},
+		timeout: 7000
 	});
 }
 

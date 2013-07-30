@@ -1,0 +1,147 @@
+body {
+  width: 1000px;
+  margin: 0 auto;
+  font-family: Lato, sans-serif;
+}
+
+#newPlan {
+  float: left;
+  width: 400px;
+  margin-bottom: 50px;
+}
+
+#newPlanHeader {
+  position: fixed;
+  width: 400px;
+  background-color: rgba(255,255,255,1);
+  z-index: 1000;
+}
+
+h1 {
+  padding: 14px 0;
+  margin: 0;
+  color: #34495e;
+}
+
+#savedPlans {
+  position: fixed;
+  right: 100px;
+  width: 500px;
+}
+
+#bambooServerForm {
+  position: fixed;
+  z-index: 1000;
+  background-color: #FFFFFF;
+  padding-bottom: 2px;
+  top: 65px;
+}
+
+#newPlans {
+  margin: 110px 0 5px 0;
+}
+
+#bambooServerUrl {
+  border: 2px solid;
+  padding: 10px;
+  margin: 0;
+  width: 275px;
+  font-size: 15px;
+}
+
+#bambooServerUrlButton {
+  color: #FFFFFF;
+  width: 97px;
+  height: 42px;
+  font-size: 17px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.extraInfo {
+  display: none;
+  width: 279px;
+  font-size: 13px;
+  padding: 10px;
+}
+
+#requestPlanError {
+  background-color: #e74c3c;
+}
+
+#requestLoading {
+  background-color: #1abc9c;
+}
+
+#urlInvalidation{
+  background-color: #bdc3c7;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.project {
+  background-color: #1abc9c;
+  color: #34495e;
+  font-size: 25px;
+  padding: 15px 0 15px 15px;
+}
+
+.plan {
+  position: relative;
+  background-color: #34495e;
+  color: #FFFFFF;
+  font-size: 17px;
+  padding: 5px 0 5px 25px;
+  border: 1px solid #333333;
+}
+
+.addPlan {
+  cursor: pointer;
+}
+
+.plan a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.plan a:hover {
+  color: #1ABC9C;
+}
+
+.deletePlan:hover {
+  color: #1abc9c;
+}
+
+.plan span {
+  cursor: pointer;
+  float: right;
+  margin-right: 10px;
+}
+
+.plan .save {
+  display: none;
+}
+
+.plan.saved {
+  padding: 10px 0 10px 25px;
+  color: #F39C12;
+  background-color: #2C3E50;
+}
+
+.plan.saved span {
+  display: block;
+  float: right;
+  margin-right: 10px;
+}
+
+.addPlan:hover {
+  color: #1abc9c;
+}

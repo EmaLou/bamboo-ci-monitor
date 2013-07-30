@@ -2,40 +2,29 @@
 <html>
   <head>
     <title>bamboo CCMenu options</title>
-    <style>
-      #newPlan {
-        width: 50%;
-        float: left;
-      }
-
-      #savedPlans {
-        position: fixed;
-        right: 0px;
-        width: 500px;
-      }
-
-      #requestPlanError {
-        display: none;
-      }
-
-    </style>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/options.css">
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/plan.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
     <script type="text/javascript" src="js/storage.js"></script>
   </head>
   <body>
+    <div id="header">
+    </div>
     <div id="newPlan">
-      new plans
-      <div id="bambooServer">
+      <h1 id="newPlanHeader">NEW PLANS</h1>
+      <form id="bambooServerForm" action="#">
         <input id="bambooServerUrl" type="text">
         <button id="bambooServerUrlButton" type="submit" disabled="disabled">submit</button>
-      </div>
-      <div id="requestPlanError"></div>
+        <div id="requestPlanError" class="extraInfo">SOMETHING WENT WRONG...PLEASE TRY AGAIN LATER</div>
+        <div id="requestLoading" class="extraInfo">LOADING...</div>
+        <div id="urlInvalidation" class="extraInfo">INVALID URL</div>
+      </form>
       <div id="newPlans"><ul></ul></div>
     </div>
     <div id="savedPlans">
-      saved plans
+      <h1 id="savedPlanHeader">SAVED PLANS</h1>
       <ul></ul>
     </div>
   </body>

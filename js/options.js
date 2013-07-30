@@ -1,3 +1,35 @@
+function triggerInvalidUrlError(isValid){
+  if (isValid) {
+    $('#urlInvalidation').slideUp();
+    $('#bambooServerUrl').css('border-color', '#1abc9c');
+    $('#bambooServerUrlButton').css({
+      'background-color': '#1abc9c'
+    });
+    $('#bambooServerUrlButton').removeAttr('disabled');
+  }
+  else {
+    $('#urlInvalidation').slideDown();
+    $('#bambooServerUrl').css('border-color', '#bdc3c7');
+    $('#bambooServerUrlButton').css({
+      'background-color': '#bdc3c7'
+    });
+    $('#bambooServerUrlButton').attr('disabled', 'disabled');
+  }
+}
+
+function triggerRequestFailureError(isSuccessful) {
+  if (isSuccessful) {
+    $('#requestPlanError').slideUp();
+    $('#bambooServerUrl').css('border-color', '#1abc9c');
+    $('#bambooServerUrlButton').css('background-color', '#1abc9c');
+  }
+  else {
+    $('#requestPlanError').slideDown();
+    $('#bambooServerUrl').css('border-color', '#e74c3c');
+    $('#bambooServerUrlButton').css('background-color', '#e74c3c');
+  }
+}
+
 function renderRequestedPlans(data, selector) {
   var projects = '',
       plans = '',
@@ -5,64 +37,103 @@ function renderRequestedPlans(data, selector) {
       singlePlan,
       isSavedPlan;
 
-  for (var i in data.projects.project) {
-    plans = '';
-    singleProject = data.projects.project[i];
-    $(selector).append('<li id="' + singleProject.key + '">' + singleProject.name + '<ul></ul></li>')
-    for (var j in singleProject.plans.plan) {
-      singlePlan = new Plan({
-        name: singleProject.plans.plan[j].name,
-        key: singleProject.plans.plan[j].key,
-        href: singleProject.plans.plan[j].link.href,
-      });
-      isSavedPlan = storage.findPlanInStorage(singlePlan);
-      $(selector).find('#' + singleProject.key + ' ul').append(
-        '<li>' +
-          '<input type="checkbox" class="addPlan" data-key="' + singlePlan.key + '" data-name="' + singlePlan.name + '" data-href="' + singlePlan.href + '"'+ (isSavedPlan? ' checked="checked"' : '')  +'>' +
-          singlePlan.name +
-        '</li>');
+  try {
+    for (var i in data.projects.project) {
+      plans = '';
+      singleProject = data.projects.project[i];
+      $(selector).append('<li id="' + singleProject.key + '" class="project">' + singleProject.name + '</li><ul></ul>')
+      for (var j in singleProject.plans.plan) {
+        singlePlan = new Plan({
+          name: singleProject.plans.plan[j].name,
+          key: singleProject.plans.plan[j].key,
+          href: singleProject.plans.plan[j].link.href,
+        });
+        isSavedPlan = storage.findPlanInStorage(singlePlan);
+        $(selector).find('#' + singleProject.key).next('ul').append(
+          '<li class="plan addPlan' + (isSavedPlan? ' saved': '') + '" data-key="' + singlePlan.key + '" data-name="' + singlePlan.name + '" data-href="' + singlePlan.href + '">' +
+            singlePlan.name +
+            '<span class="save">✔</span>' +
+          '</li>');
+      }
     }
+    $('.addPlan').on('click', function() {
+      var plan = new Plan({key: $(this).data('key'),
+                          name: $(this).data('name'),
+                          href: $(this).data('href')
+                          });
+      if (!$(this).hasClass('saved')) {
+        savePlan(plan);
+        $(this).addClass('saved');
+      }
+      else {
+        deletePlan(plan);
+        $(this).removeClass('saved');
+      }
+    });
+    triggerRequestFailureError(true);
+    return true;
   }
-  $('.addPlan').on('click', function() {
-    var plan = new Plan({key: $(this).data('key'),
-                        name: $(this).data('name'),
-                        href: $(this).data('href')
-                        });
-    if ($(this).is(':checked')) {
-      savePlan(plan);
-    }
-    else {
-      deletePlan(plan);
-    }
-  });
-  $('#requestPlanError').slideUp('fast');
+  catch (error) {
+    triggerRequestFailureError(false);
+    return false;
+  }
+}
+
+function saveUrlAndData(bambooServerUrl, data){
+  var bambooServerConfig = {
+    bambooServerUrl: bambooServerUrl,
+    data: data
+  };
+  localStorage.bambooServerConfig = JSON.stringify(bambooServerConfig);
 }
 
 function requestPlans(bambooServerUrl) {
-  $('#requestPlanError').html('Loading...');
-  $('#requestPlanError').slideDown('fast');
+  triggerRequestFailureError(true);
+  $('#requestLoading').slideDown();
   $.ajax({
     url: bambooServerUrl + 'rest/api/latest/project.json?expand=projects.project.plans.plan',
     success: function(data) {
-      renderRequestedPlans(data, '#newPlans > ul');
+      if (renderRequestedPlans(data, '#newPlans > ul', bambooServerUrl)) {
+        saveUrlAndData(bambooServerUrl, data);
+      }
     },
     error: function() {
-      $('#requestPlanError').html('something went wrong...please try again later');
+      triggerInvalidUrlError(false);
+    },
+    complete: function() {
+      $('#requestLoading').slideUp();
     }
   });
 }
 
 function renderSavedPlan(savedPlan) {
-  $('#savedPlans ul').append('<li id="' + savedPlan.key + '" data-key="'+savedPlan.key+'" data-href="'+savedPlan.href+'" data-name="'+savedPlan.name+'">' + 
-                               '<input type="checkbox" class="deletePlan" checked="checked">' + 
+  $('#savedPlans ul').append('<li id="' + savedPlan.key + '" class="plan" data-key="'+savedPlan.key+'" data-href="'+savedPlan.href+'" data-name="'+savedPlan.name+'">' + 
                                savedPlan.getLink() + 
+                               '<span class="deletePlan">✘</span>' +
                              '</li>');
+  $('.deletePlan').on('click', function() {
+    var li = $(this).closest("li"),
+        plan = {key: $(li).data('key'),
+                name: $(li).data('name'),
+                href: $(li).data('href')
+              };
+    deletePlan(plan);
+  });
 }
 
 function renderSavedPlans(savedPlans) {
   for (i in savedPlans) {
     renderSavedPlan(savedPlans[i]);
   }
+}
+
+function renderSavedBambooServerConfig(){
+  if (localStorage.bambooServerConfig === undefined || localStorage.bambooServerConfig === "") {
+    return;
+  }
+  var bambooServerConfig = JSON.parse(localStorage.bambooServerConfig);
+  $('#bambooServerUrl').val(bambooServerConfig.bambooServerUrl);
+  renderRequestedPlans(bambooServerConfig.data, '#newPlans > ul');
 }
 
 function savePlan(plan) {
@@ -73,17 +144,18 @@ function savePlan(plan) {
 function deletePlan(plan) {
   storage.deletePlanFromStorage(plan);
   $('#savedPlans ul').find("#" + plan.key).remove();
-  var input = $('#newPlans input').filter(function() {
+  var planList = $('#newPlans li').filter(function() {
     return $(this).data('key') === plan.key;
   });
-  input.prop("checked", false);
+  planList.removeClass('saved');
 }
 
 $(document).ready(function() {
   var savedPlans = storage.getStorage();
   renderSavedPlans(savedPlans);
+  renderSavedBambooServerConfig();
 
-  $('#bambooServerUrlButton').click(function(e) {
+  $('#bambooServerForm').submit(function(e) {
     var bambooServerUrl = $('#bambooServerUrl').val();
     if ($("#bambooServerUrlButton").is(":disabled")) {
       return;
@@ -103,26 +175,9 @@ $(document).ready(function() {
         bambooServerUrl = $('#bambooServerUrl').val();
 
     e.preventDefault();
-    if (urlPattern.test(bambooServerUrl)) {
-      $('#requestPlanError').slideUp();
-      $('#bambooServerUrlButton').removeAttr('disabled');
-      if (e.keyCode === 13) {
-        $('#bambooServerUrlButton').click();
-      }
-    }
-    else {
-      $('#requestPlanError').html('invalid url')
-      $('#requestPlanError').slideDown();
-      $('#bambooServerUrlButton').attr('disabled', 'disabled');
-    }
+    triggerRequestFailureError(true);
+    triggerInvalidUrlError(urlPattern.test(bambooServerUrl));
   });
 
-  $('.deletePlan').live('click', function() {
-    var li = $(this).closest("li"),
-        plan = {key: $(li).data('key'),
-                name: $(li).data('name'),
-                href: $(li).data('href')
-              };
-    deletePlan(plan);
-  });
+  $('#bambooServerUrl').trigger('keyup');
 });
