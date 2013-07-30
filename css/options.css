@@ -99,7 +99,7 @@ li {
   background-color: #34495e;
   color: #FFFFFF;
   font-size: 17px;
-  padding: 5px 0 5px 25px;
+  padding: 5px 30px 5px 25px;
   border: 1px solid #333333;
 }
 
@@ -118,6 +118,10 @@ li {
 
 .deletePlan:hover {
   color: #1abc9c;
+}
+
+.plan span.deletePlan {
+  margin: 0;
 }
 
 .plan span {
