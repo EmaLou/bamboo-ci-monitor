@@ -1,0 +1,49 @@
+<html>
+<head>
+	<title>Spec Runner</title>
+  <meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../js/lib/jasmine-1.3.1/jasmine.css">
+	<script type="text/javascript" src="../js/lib/jasmine-1.3.1/jasmine.js"></script>
+  <script type="text/javascript" src="../js/lib/jasmine-1.3.1/jasmine-html.js"></script>
+  <script type="text/javascript" src="../js/lib/jquery.min.js"></script>
+  <script type="text/javascript" src="../js/lib/jasmine-jquery.js"></script>
+	<script type="text/javascript" src="../js/lib/underscore-min.js"></script>
+
+  <script type="text/javascript" src="../js/Plan.js"></script>
+	<script type="text/javascript" src="../js/Icon.js"></script>
+  <script type="text/javascript" src="planSpec.js"></script>
+	<script type="text/javascript" src="IconSpec.js"></script>
+
+  <script type="text/javascript">
+    (function() {
+      var jasmineEnv = jasmine.getEnv();
+      jasmineEnv.updateInterval = 1000;
+
+      var htmlReporter = new jasmine.HtmlReporter();
+
+      jasmineEnv.addReporter(htmlReporter);
+
+      jasmineEnv.specFilter = function(spec) {
+        return htmlReporter.specFilter(spec);
+      };
+
+      var currentWindowOnload = window.onload;
+
+      window.onload = function() {
+        if (currentWindowOnload) {
+          currentWindowOnload();
+        }
+        execJasmine();
+      };
+
+      function execJasmine() {
+        jasmineEnv.execute();
+      }
+
+    })();
+  </script>
+</head>
+<body>
+
+</body>
+</html>

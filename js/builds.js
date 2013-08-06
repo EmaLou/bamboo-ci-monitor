@@ -5,8 +5,8 @@ function renderSavedPlansStatus() {
 	for (i in savedPlans) {
 		$('#status ul').append(
 			'<li class="plan">' +
-			  '<img src="' + savedPlans[i].getStatusIcon() + '"></img>' +
-			  savedPlans[i].getLink() +
+			  savedPlans[i].renderIcon() +
+			  savedPlans[i].renderLink() +
 			'</li>');
 	}
 }

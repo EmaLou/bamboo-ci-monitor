@@ -108,7 +108,7 @@ function requestPlans(bambooServerUrl) {
 
 function renderSavedPlan(savedPlan) {
   $('#savedPlans ul').append('<li id="' + savedPlan.key + '" class="plan" data-key="'+savedPlan.key+'" data-href="'+savedPlan.href+'" data-name="'+savedPlan.name+'">' + 
-                               savedPlan.getLink() + 
+                               savedPlan.renderLink() + 
                                '<span class="deletePlan">✘</span>' +
                              '</li>');
   $('.deletePlan').on('click', function() {

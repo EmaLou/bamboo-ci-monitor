@@ -22,9 +22,15 @@ function updatePlanStatus(plan){
 	$.ajax({
 		url: host[0] + 'rest/api/latest/result/' + plan.key + '.json',
 		success: function(data) {
-			plan.updateLatestStatus(data.results.result[0].number, data.results.result[0].state);
-			storage.updatePlan(plan);
-			updateCurrentStatus(data, plan);
+			if (data.results.result[0].plan.enabled === false) {
+				plan.updateLatestStatus(data.results.result[0].number, 'NULL');
+				plan.updateCurrentStatus(data.results.result[0].number + 1, 'NULL');
+			}
+			else {
+				plan.updateLatestStatus(data.results.result[0].number, data.results.result[0].state);
+				storage.updatePlan(plan);
+				updateCurrentStatus(data, plan);	
+			}
 		},
 		error: function(data) {
 			plan.updateLatestStatus(0, 'NULL');
@@ -36,8 +42,8 @@ function updatePlanStatus(plan){
 }
 
 function updateIcon(icon, plan) {
-	if (plan.getStatusIndex() > icon) {
-		return plan.getStatusIndex();
+	if (plan.getStatus() > icon) {
+		return plan.getStatus();
 	}
 	return icon;
 }
@@ -45,12 +51,13 @@ function updateIcon(icon, plan) {
 function fetchSavedPlansStatus () {
 	var savedPlans = storage.getStorage(),
 			icon = 0;
+
 	for (i in savedPlans) {
 		updatePlanStatus(savedPlans[i]);
 		icon = updateIcon(icon, savedPlans[i]);
 	}
 	chrome.browserAction.setIcon({
-		path: statusIcons[icon]
+		path: new Icon().getIconOfStatus([icon])
 	});
 }
 

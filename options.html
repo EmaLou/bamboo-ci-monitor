@@ -4,8 +4,9 @@
     <title>bamboo CCMenu options</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/options.css">
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/plan.js"></script>
+    <script type="text/javascript" src="js/lib/underscore-min.js"></script>
+    <script type="text/javascript" src="js/lib/jquery.min.js"></script>
+    <script type="text/javascript" src="js/Plan.js"></script>
     <script type="text/javascript" src="js/options.js"></script>
     <script type="text/javascript" src="js/storage.js"></script>
   </head>
@@ -21,7 +22,9 @@
         <div id="requestLoading" class="extraInfo">LOADING...</div>
         <div id="urlInvalidation" class="extraInfo">INVALID URL</div>
       </form>
-      <div id="newPlans"><ul></ul></div>
+      <div id="newPlans">
+        <ul></ul>
+      </div>
     </div>
     <div id="savedPlans">
       <h1 id="savedPlanHeader">SAVED PLANS</h1>
