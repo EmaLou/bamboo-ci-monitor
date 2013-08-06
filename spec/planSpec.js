@@ -22,6 +22,18 @@ describe('Plan', function() {
 		expect(plan.renderLink()).toBe('<a href="http://test.com/browse/KEY" target="_blank">name</a>');
 	});
 
+	it('should convert to JSON', function() {
+		expect(plan.toJSON()).toEqual({
+			name: "name",
+			key: "KEY",
+			href: "http://test.com/rest/api/latest/key.json",
+			latestBuildNumber: 0,
+			latestBuildStatus: "Successful",
+			currentBuildNumber: 1,
+			currentBuildStatus: "Unknown"
+		})
+	});
+
 	it('should equal to another plan if name & key & href are same', function() {
 		var anotherPlan = new Plan({
 			key: "KEY",
