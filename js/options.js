@@ -31,31 +31,13 @@ function triggerRequestFailureError(isSuccessful) {
 }
 
 function renderRequestedPlans(data, selector) {
-  var projects = '',
-      plans = '',
-      singleProject,
-      singlePlan,
-      isSavedPlan;
+  var projects;
 
   try {
-    for (var i in data.projects.project) {
-      plans = '';
-      singleProject = data.projects.project[i];
-      $(selector).append('<li id="' + singleProject.key + '" class="project">' + singleProject.name + '</li><ul></ul>')
-      for (var j in singleProject.plans.plan) {
-        singlePlan = new Plan({
-          name: singleProject.plans.plan[j].name,
-          key: singleProject.plans.plan[j].key,
-          href: singleProject.plans.plan[j].link.href,
-        });
-        isSavedPlan = storage.findPlanInStorage(singlePlan);
-        $(selector).find('#' + singleProject.key).next('ul').append(
-          '<li class="plan addPlan' + (isSavedPlan? ' saved': '') + '" data-key="' + singlePlan.key + '" data-name="' + singlePlan.name + '" data-href="' + singlePlan.href + '">' +
-            singlePlan.name +
-            '<span class="save">✔</span>' +
-          '</li>');
-      }
-    }
+    projects = new ProjectParser().parse(data);
+    _.each(projects, function(project) {
+      $(selector).append(project.render());
+    });
     $('.addPlan').on('click', function() {
       var plan = new Plan({key: $(this).data('key'),
                           name: $(this).data('name'),
@@ -107,10 +89,7 @@ function requestPlans(bambooServerUrl) {
 }
 
 function renderSavedPlan(savedPlan) {
-  $('#savedPlans ul').append('<li id="' + savedPlan.key + '" class="plan" data-key="'+savedPlan.key+'" data-href="'+savedPlan.href+'" data-name="'+savedPlan.name+'">' + 
-                               savedPlan.renderLink() + 
-                               '<span class="deletePlan">✘</span>' +
-                             '</li>');
+  $('#savedPlans ul').append(savedPlan.renderForSaved());
   $('.deletePlan').on('click', function() {
     var li = $(this).closest("li"),
         plan = {key: $(li).data('key'),

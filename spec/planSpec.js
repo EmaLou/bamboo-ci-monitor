@@ -127,17 +127,17 @@ describe('Plan', function() {
 
 	it('shoule render new plan for requested if not saved', function() {
 		expect(plan.renderForRequested(false)).toBe(
-			'<li class="plan addPlan">' +
-				'<span data-key="KEY" data-name="name" data-href="http://test.com/rest/api/latest/key.json">name</span>' +
-				'<span class="saved">✔</span>' +
+			'<li class="plan addPlan" data-key="KEY" data-name="name" data-href="http://test.com/rest/api/latest/key.json">' +
+				'<span>name</span>' +
+				'<span class="save">✔</span>' +
 			'</li>');
 	});
 
 	it('shoule render new plan for requested if not saved', function() {
 		expect(plan.renderForRequested(true)).toBe(
-			'<li class="plan addPlan saved">' +
-				'<span data-key="KEY" data-name="name" data-href="http://test.com/rest/api/latest/key.json">name</span>' +
-				'<span class="saved">✔</span>' +
+			'<li class="plan addPlan saved" data-key="KEY" data-name="name" data-href="http://test.com/rest/api/latest/key.json">' +
+				'<span>name</span>' +
+				'<span class="save">✔</span>' +
 			'</li>');
 	});
 

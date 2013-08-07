@@ -24,13 +24,13 @@ describe('Project', function() {
 				'<span>project</span>' +
 			'</li>' +
 			'<ul>' +
-				'<li class="plan addPlan">' +
-					'<span data-key="KEY1" data-name="plan1" data-href="http://test.com/plan1">plan1</span>' +
-					'<span class="saved">✔</span>' +
+				'<li class="plan addPlan" data-key="KEY1" data-name="plan1" data-href="http://test.com/plan1">' +
+					'<span>plan1</span>' +
+					'<span class="save">✔</span>' +
 				'</li>' +
-				'<li class="plan addPlan">' +
-					'<span data-key="KEY2" data-name="plan2" data-href="http://test.com/plan2">plan2</span>' +
-					'<span class="saved">✔</span>' +
+				'<li class="plan addPlan" data-key="KEY2" data-name="plan2" data-href="http://test.com/plan2">' +
+					'<span>plan2</span>' +
+					'<span class="save">✔</span>' +
 				'</li>' +
 			'</ul>'
 			)

@@ -4,12 +4,12 @@ var Project = function(projectJSON) {
 	this.key = projectJSON.key;
 	this.plans = [];
 	this.projectTemplate = _.template(
-			'<li id="<%= key %>" class="<%= name %>">' +
+			'<li id="<%= key %>" class="project">' +
 				'<span><%= name %></span>' +
 			'</li>' +
 			'<ul>' +
 				'<% _.each(plans, function(plan) { %>' +
-					'<%= plan.renderForRequested(false) %>' +
+					'<%= plan.renderForRequested(storage.findPlanInStorage(plan)) %>' +
 				'<% }) %>' +
 			'</ul>'
 		);

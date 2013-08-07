@@ -5,6 +5,21 @@ body {
   background: url('/img/lgrey040.jpg') fixed;
 }
 
+h1 {
+  padding: 14px 0;
+  margin: 0;
+  color: #34495e;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
 #newPlan {
   float: left;
   width: 400px;
@@ -16,18 +31,6 @@ body {
   width: 400px;
   background: url('/img/lgrey040.jpg') fixed;
   z-index: 1000;
-}
-
-h1 {
-  padding: 14px 0;
-  margin: 0;
-  color: #34495e;
-}
-
-#savedPlans {
-  position: fixed;
-  right: 100px;
-  width: 500px;
 }
 
 #bambooServerForm {
@@ -79,13 +82,10 @@ h1 {
   background-color: #bdc3c7;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-}
-
-li {
-  list-style: none;
+#savedPlans {
+  position: fixed;
+  right: 100px;
+  width: 500px;
 }
 
 .project {
@@ -104,8 +104,10 @@ li {
   border: 1px solid #333333;
 }
 
-.addPlan {
-  cursor: pointer;
+.plan.saved {
+  padding: 10px 0 10px 25px;
+  color: #1abc9c;
+  background-color: #2C3E50;
 }
 
 .plan a {
@@ -117,34 +119,31 @@ li {
   color: #1ABC9C;
 }
 
-.deletePlan:hover {
+.plan .deletePlan:hover {
   color: #1abc9c;
+}
+
+.plan span.save, 
+.plan span.deletePlan {
+  cursor: pointer;
+  float: right;
+}
+
+.plan span.save {
+  margin-right: 10px;
+  display: none;
+}
+
+.plan.saved span.save {
+  display: block;
 }
 
 .plan span.deletePlan {
   margin: 0;
 }
 
-.plan span {
+.addPlan {
   cursor: pointer;
-  float: right;
-  margin-right: 10px;
-}
-
-.plan .save {
-  display: none;
-}
-
-.plan.saved {
-  padding: 10px 0 10px 25px;
-  color: #1abc9c;
-  background-color: #2C3E50;
-}
-
-.plan.saved span {
-  display: block;
-  float: right;
-  margin-right: 10px;
 }
 
 .addPlan:hover {

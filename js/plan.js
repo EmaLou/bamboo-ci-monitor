@@ -9,9 +9,9 @@ var Plan = function(planJSON) {
 	this.linkTemplate = _.template('<a href="<%= href %>" target="_blank"><%= name %></a>');
 	this.iconTemplate = _.template('<img src="<%= src %>"></img>');
 	this.requestPlanTemplate = _.template(
-		'<li class="plan addPlan<%= saved %>">' +
-			'<span data-key="<%= key %>" data-name="<%= name %>" data-href="<%= href %>"><%= name %></span>' +
-			'<span class="saved">✔</span>' +
+		'<li class="plan addPlan<%= saved %>" data-key="<%= key %>" data-name="<%= name %>" data-href="<%= href %>">' +
+			'<span><%= name %></span>' +
+			'<span class="save">✔</span>' +
 		'</li>'
 		);
 
