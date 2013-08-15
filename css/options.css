@@ -22,13 +22,13 @@ li {
 
 #newPlan {
   float: left;
-  width: 400px;
+  width: 480px;
   margin-bottom: 50px;
 }
 
 #newPlanHeader {
   position: fixed;
-  width: 400px;
+  width: 480px;
   background: url('/img/lgrey040.jpg') fixed;
   z-index: 1000;
 }
@@ -49,7 +49,7 @@ li {
   border: 2px solid;
   padding: 10px;
   margin: 0;
-  width: 275px;
+  width: 355px;
   font-size: 15px;
 }
 
@@ -65,7 +65,7 @@ li {
 
 .extraInfo {
   display: none;
-  width: 279px;
+  width: 359px;
   font-size: 13px;
   padding: 10px;
 }
